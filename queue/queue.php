@@ -135,22 +135,43 @@ $conn->close();*/
 
 <title><?php echo $sv['site_name'];?> Waitlist</title>
 
-    <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Dashboard</h1>
+            <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-ticket fa-fw"></i> Device Status
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tr class="tablerow">
+                            <td>Number</td>
+                            <td>UTAID</td> 
+                            <td>Signed In</td>
+                            <td>Expected Wait</td>
+                        </tr>
+                        <?php
 
-    <table style="width:80%">
-        <tr>
-            <th>Number</th>
-            <th>UTAID</th> 
-            <th>Signed In</th>
-            <th>Expected Wait</th>
-        </tr>
-    <?php
+                        //get_q_all();
 
-    //get_q_all();
-
-    ?>
-    </table>
-
+                        ?>
+                        </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
 <?php
 //Standard call for dependencies
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
