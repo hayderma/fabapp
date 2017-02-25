@@ -138,7 +138,7 @@ $conn->close();*/
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Dashboard</h1>
+            <h1 class="page-header">Waitlist</h1>
             <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
         </div>
         <!-- /.col-lg-12 -->
