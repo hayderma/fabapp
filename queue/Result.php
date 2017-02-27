@@ -1,10 +1,21 @@
 
+<?php include("connecting.php"); ?>
 <?php
     
      if(isset($_POST['submit'])) {
     // form submitted, now we can look at the data that came through
     // the value inside the brackets comes from the name attribute of the input field. (just like submit above)
-    $netid = $_POST['nid'];
+    $u_id = $_POST['nid'];
+    $ph_num = $_POST['phone'];
+    $mach = $_POST['machine_select'];
+    $valid_email=true;
+    $e_mail=$_POST['email'];
+    if(! "" == trim($_POST['email'])){  //checks if email field is not empty
+        
+        if (!filter_var($e_mail, FILTER_VALIDATE_EMAIL)) {  //checks if email is not valid
+           $valid_email=false;
+        }
+    }
 
     // Now you can do whatever with this variable.
 }
@@ -12,22 +23,16 @@ else{
     echo 'null pointer';
 }
 
-    
-function get_connection(){
-  $servername = "localhost";
-$username = "root";
-$password = "pass";
-$dbname = "student";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-return $conn;
-    }
+
+    
+
     
 function get_server_timestamp(){
     
         $time_stamp="";
-        $conn = get_connection();
+        $co = new connecting();
+        $conn = $co->get_connection();
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -54,15 +59,17 @@ $conn->close();
 return $time_stamp;
     }
     
-function insert_q($id){
+function insert_q($id,$machine_t,$e_add,$ph_n){
     
         
-        $conn = get_connection();
+        $co = new connecting();
+        $conn = $co->get_connection();
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
+
 
 $sql = 'INSERT INTO queue (
 q_id ,
@@ -74,10 +81,12 @@ q_start ,
 duration ,
 email ,
 phone ,
-ca_id
+ca_id,
+ticket_num,
+status
 )
 VALUES (
-NULL , 1, '.$id.', "code", "string", "'. get_server_timestamp().'" , "string", "myemail" , "8179999999" , 1
+NULL , 1, '.$id.', "code", "string", "'. get_server_timestamp().'" , "string", "'.$e_add.'" , "'.$ph_n.'" , 1, "'.$co->generate_ticket($machine_t).'", "Not Activated"
 )';
 
 if ($conn->query($sql) === TRUE) {
@@ -130,8 +139,23 @@ h2{
 
  
   <?php
- 
-  insert_q($netid)
+    //creating connecting object 
+        $v = new connecting();
+        $vali = $v->validate_user($u_id);   
+        if($vali && $valid_email){
+            insert_q($u_id,$mach,$e_mail,$ph_num);  //insert to queue
+        }
+        else{
+        if (!$vali) {
+            echo 'Invalid User';
+        
+        }
+        if (! $valid_email) {
+            echo 'Invalid Email Address';
+        
+    }
+    }
+  
   
   ?>
  
