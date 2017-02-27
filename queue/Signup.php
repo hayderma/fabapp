@@ -1,4 +1,6 @@
- <?php
+<?php include("connecting.php"); ?> 
+
+<?php
  /*
 $cars = array("Volvo", "BMW", "Toyota");
 foreach ($cars as $v){
@@ -22,12 +24,22 @@ elseif (!$x){
 <body>
     <a href="manage.php">Admin Login</a>  <br>
     <a href="index.php">HOME</a>  <br> <br>
+    <p>Enter Email and/or Phone number to be notified when you're turn is coming up</p> <br> <br>
     
     
     <form action="Result.php" method="post">
-  NETID: <input type="text" name="nid" placeholder="Your NETID">
+  UTA ID: <input type="text" name="nid" placeholder="Your UTA ID #">
   <br> <br>
-  Email: <input type="text" name="email" placeholder="Email (Optional)">
+  Email :  <input type="text" name="email" placeholder="Email (Optional)">
+  <br> <br>
+  Phone: <input type="text" name="phone" placeholder="Phone# (Optional)">
+  <br> <br>
+  
+  <p>Available Machines (Choose one to use) : </p>
+  <?php 
+  $select = new connecting();
+  $select->machine_selector();
+  ?>
   <br><br>
   <input type="submit" name="submit" value="Submit">
 </form> 
