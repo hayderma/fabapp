@@ -6,7 +6,7 @@
 function get_connection(){
   $servername = "localhost";
 $username = "root";
-$password = "pass";
+$password = "tech1933";
 $dbname = "student";
 
 // Create connection
