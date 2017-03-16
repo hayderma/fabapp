@@ -1,4 +1,12 @@
-
+<?php
+/*
+ *   CC BY-NC-AS UTA FabLab 2016-2017
+ *   FabApp V 0.9
+ */
+include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
+$device_array = array();
+$_SESSION['type'] = "home";
+?>
 <?php include("connecting.php"); ?>
 <?php
     
@@ -131,53 +139,47 @@ $conn->close();*/
 
 ?> 
 
+<title><?php echo $sv['site_name'];?> Waitlist</title>
 
-<!DOCTYPE html>
-<html>
-    <h2> HOME </h2> 
-    
-    <h3> Waitlist </h3>
-<head>
-    <title>Show Waitlist</title>
-<style>
-  
-table, th, td {
-    border: 5px solid black;
-    border-collapse: collapse;
-    text-align:center; 
-    vertical-align:middle;
-}
-th, td {
-    padding: 15px;
-}
-h2,h3{
-    text-align:center; 
-}
-</style>
-</head>
-<body>
-    <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Waitlist</h1>
+            <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-ticket fa-fw"></i> Device Status
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tr class="tablerow">
+                            <th>Ticket Number</th> 
+                            <th>Ticket Status</th>
+                            <th>Signed In</th>
+                            <th>Expected Wait</th>
+                        </tr>
 
-<table style="width:80%">
-  <tr>
-    
-    <th>Ticket Number</th> 
-    <th>Ticket Status</th>
-    <th>Signed In</th>
-    <th>Expected Wait</th>
-  </tr>
- 
-  <?php
- 
- get_q_all();
-  
-  ?>
- 
- 
- 
-</table>
+                        <?php
 
+                        get_q_all();
 
-
-</body>
-</html>
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+<?php
+//Standard call for dependencies
+include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
+?>
