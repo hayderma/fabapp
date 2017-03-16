@@ -1,4 +1,12 @@
-
+<?php
+/*
+ *   CC BY-NC-AS UTA FabLab 2016-2017
+ *   FabApp V 0.9
+ */
+include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
+$device_array = array();
+$_SESSION['type'] = "home";
+?>
 <?php include("connecting.php"); ?>
 <?php
     
@@ -112,58 +120,56 @@ $conn->close();
 ?> 
 
 
-<!DOCTYPE html>
-<html>
-    <h2> Result(s): </h2>
-<head>
-    <title>Result</title>
-<style>
-  
-table, th, td {
-    border: 5px solid black;
-    border-collapse: collapse;
-    text-align:center; 
-    vertical-align:middle;
-}
-th, td {
-    padding: 15px;
-}
-h2{
-    text-align:center; 
-}
-</style>
-</head>
-<body>
-    <a href="index.php">HOME</a>  <br> <br>
+<title><?php echo $sv['site_name'];?> Waitlist</title>
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Results</h1>
+            <a href="index.php">HOME</a>  <br> <br>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-ticket fa-fw"></i> Student Status
+                </div>
+                <div class="panel-body">
 
 
- 
-  <?php
-    //creating connecting object 
-        $v = new connecting();
-        $vali = $v->validate_user($u_id);   
-        if($vali && $valid_email){
-            insert_q($u_id,$mach,$e_mail,$ph_num);  //insert to queue
-        }
-        else{
-        if (!$vali) {
-            echo 'Invalid User';
-        
-        }
-        if (! $valid_email) {
-            echo 'Invalid Email Address';
-        
-    }
-    }
-  
-  
-  ?>
- 
- 
- 
-</table>
-
-
-
-</body>
-</html>
+                 
+                  <?php
+                    //creating connecting object 
+                        $v = new connecting();
+                        $vali = $v->validate_user($u_id);   
+                        if($vali && $valid_email){
+                            insert_q($u_id,$mach,$e_mail,$ph_num);  //insert to queue
+                        }
+                        else{
+                        if (!$vali) {
+                            echo 'Invalid User';
+                        
+                        }
+                        if (! $valid_email) {
+                            echo 'Invalid Email Address';
+                        
+                    }
+                    }
+                  
+                  
+                  ?>
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+<?php
+//Standard call for dependencies
+include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
+?>
