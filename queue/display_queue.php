@@ -1,12 +1,4 @@
-<?php
-/*
- *   CC BY-NC-AS UTA FabLab 2016-2017
- *   FabApp V 0.9
- */
-include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
-$device_array = array();
-$_SESSION['type'] = "home";
-?>
+
 <?php
     
     
@@ -14,7 +6,7 @@ $_SESSION['type'] = "home";
 function get_connection(){
   $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "tech1933";
 $dbname = "student";
 
 // Create connection
@@ -54,7 +46,7 @@ return $time_stamp;
     
 function get_q_count(){
     
-        $ctr = 0;
+        $ctr==0;
         $conn = get_connection();
 // Check connection
 if ($conn->connect_error) {
@@ -84,7 +76,7 @@ return $ctr;
     
  function get_q_all(){
     
-        $ctr = 0;
+        $ctr==0;
         $conn = get_connection();
 // Check connection
 if ($conn->connect_error) {
@@ -153,52 +145,49 @@ $conn->close();
 ?> 
 
 
-<title><?php echo $sv['site_name'];?> Waitlist</title>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Waitlist</title>
+<style>
+  
+table, th, td {
+    border: 5px solid black;
+    border-collapse: collapse;
+    text-align:center; 
+    vertical-align:middle;
+}
+th, td {
+    padding: 15px;
+}
+</style>
+</head>
+<body>
 
-<div id="page-wrapper">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Waitlist</h1>
-            <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-    <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-ticket fa-fw"></i> Device Status
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped table-bordered table-hover">
-                        <tr class="tablerow">
-                            <th>Number</th>
-                            <th>UTAID</th> 
-                            <th>Signed In</th>
-                            <th>Expected Wait</th>
-                        </tr>
-                            <tr>
-                            <td>1</td>
-                            <td>Hayder MA</td>
-                            <td>1:00 PM</td>
-                            <td>1 Hour</td>
-                        </tr>
-                        <?php
-                        // for ($c=0; $c< get_q_count();$c++){
-                        get_q_all();
+<table style="width:80%">
+  <tr>
+    <th>Number</th>
+    <th>UTAID</th> 
+    <th>Signed In</th>
+    <th>Expected Wait</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Hayder MA</td>
+    <td>1:00 PM</td>
+    <td>1 Hour</td>
+  </tr>
+  <?php
+ // for ($c=0; $c< get_q_count();$c++){
+ get_q_all();
+  
+  ?>
+ 
+ 
+ 
+</table>
 
-                        ?>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- /.col-lg-8 -->
-    </div>
-    <!-- /.row -->
-</div>
-<!-- /#page-wrapper -->
-<?php
-//Standard call for dependencies
-include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
-?>
+<p>Try to change the padding to 5px.</p>
+
+</body>
+</html>
