@@ -47,7 +47,7 @@ return $time_stamp;
     
 function get_q_count(){
     
-        $ctr==0;
+        $ctr = 0;
         $co = new connecting();
         $conn = $co->get_connection();
 // Check connection
@@ -78,7 +78,7 @@ return $ctr;
     
  function get_q_all(){
     
-        $ctr==0;
+        $ctr = 0;
         $co = new connecting();
         $conn = $co->get_connection();
 // Check connection
