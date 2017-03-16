@@ -154,7 +154,7 @@ $conn->close();*/
         <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-ticket fa-fw"></i> Device Status
+                    <i class="fa fa-ticket fa-fw"></i> Queue Status
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped table-bordered table-hover">
