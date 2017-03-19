@@ -78,6 +78,14 @@ if ($conn->connect_error) {
     return;
 }
 
+$ticket_number = $co->generate_ticket($machine_t); //variable for ticket number
+
+$status = "You successfully Signed Up, your Ticket number is ".$ticket_number.".<br> <br> If you provided Email/Phone information, they will be used to notify you when your turn is comping up.<br>Your estimated wait time will be updating automatically on the screen";
+if ($co->ticket_exists_already($ticket_number)){
+
+    $status = "Signup Unsuccessfull, ticket number already exists, Please click Go to Home to Signup";
+    
+}
 
 $sql = 'INSERT INTO queue (
 q_id ,
@@ -94,13 +102,13 @@ ticket_num,
 status
 )
 VALUES (
-NULL , 1, '.$id.', "code", "string", "'. get_server_timestamp().'" , "string", "'.$e_add.'" , "'.$ph_n.'" , 1, "'.$co->generate_ticket($machine_t).'", "Not Activated"
+NULL , 1, '.$id.', "code", "string", "'. get_server_timestamp().'" , "string", "'.$e_add.'" , "'.$ph_n.'" , 1, "'.$ticket_number.'", "Not Activated"
 )';
 
 if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
+    echo $status ;
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error While Signing up, Please call a staff member for help. <br> <br> Database Error Message :<br>" . $sql . "<br>" . $conn->error;
 }
     
 
@@ -120,13 +128,27 @@ $conn->close();
 ?> 
 
 
-<title><?php echo $sv['site_name'];?> Waitlist</title>
+<title><?php echo $sv['site_name'];?> Results</title>
+ <script>
+function disable_f5(e)
+{
+  if ((e.which || e.keyCode) == 116)
+  {
+      e.preventDefault();
+  }
+}
+
+$(document).ready(function(){
+    $(document).bind("keydown", disable_f5);    
+});
+</script> 
 
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">Results</h1>
-            <a href="index.php">HOME</a>  <br> <br>
+            <h4 class="page-header">Do Not Refresh this page, use "Back to Home" to confirm Signup on the list</h4>
+            <a href="index.php">Back to Home</a>  <br> <br>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -135,10 +157,13 @@ $conn->close();
         <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-ticket fa-fw"></i> Student Status
+                    <i class="fa fa-ticket fa-fw"></i> Signup
+                    
                 </div>
                 <div class="panel-body">
-
+                    
+                    
+    
 
                  
                   <?php
@@ -162,10 +187,46 @@ $conn->close();
                   
                   ?>
                 </div>
+                
+                
             </div>
         </div>
         <!-- /.col-lg-8 -->
     </div>
+    
+       <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-ticket fa-fw"></i> User Training Requirements
+                    
+                </div>
+                <div class="panel-body">
+                    
+                    
+    
+
+                 
+                  <?php
+                    //creating connecting object 
+                    echo 'Completed';
+                  
+                  
+                  ?>
+                </div>
+                
+                
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+    </div>
+    
+    
+    
+    
+    
+    
+    
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
