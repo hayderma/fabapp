@@ -7,25 +7,19 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 $device_array = array();
 $_SESSION['type'] = "home";
 ?>
+<?php include("connecting.php"); ?>
+
 <?php
     
-    
-    
-function get_connection(){
-  $servername = "localhost";
-$username = "root";
-$password = "pass";
-$dbname = "student";
+            
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-return $conn;
-    }
     
 function get_server_timestamp(){
     echo 'starting';
-        $time_stamp=" time sta";
-        $conn = get_connection();
+        $time_stamp="";
+        //creating connecting object
+        $co = new connecting();
+        $conn = $co->get_connection();
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -55,7 +49,8 @@ return $time_stamp;
 function get_q_count(){
     
         $ctr = 0;
-        $conn = get_connection();
+        $co = new connecting();
+        $conn = $co->get_connection();
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -84,50 +79,80 @@ return $ctr;
     
  function get_q_all(){
     
-        $ctr = 0;
-        $conn = get_connection();
+       // $ctr = 0;
+        $co = new connecting();
+        $conn = $co->get_connection();
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
 
-$sql = "select q_id,UTAID,email FROM queue";
+$sql = "select status,ticket_num,q_start FROM queue";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         $one_row= ' <tr>
-    <td>'. $row["q_id"].'</td>
-    <td>'. $row["UTAID"].'</td>   
-    <td>'. $row["email"].'</td>
+    <td>'. $row["ticket_num"].'</td> 
+    <td id="status_' . $row["ticket_num"] . '">' . $row["status"] . '</td>
+    <td>' . $row["q_start"] . '</td>
     <td>To be determined by machine</td>
+    <td>
+        <select name="admin" id="opt_' . $row["ticket_num"] . '" required>
+            <option value="Activated">Activate</option>
+            <option value="Cancelled">Cancel</option>
+            <option value="Closed">Close</option>
+        </select>
+    </td>
+    <td>
+        <button type="button" id="btn_' . $row["ticket_num"] . '">Go</button>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#btn_' . $row["ticket_num"] . '").click(function() {
+                    var ticket_num = "' . $row["ticket_num"] . '";
+                    var select = document.getElementById("opt_' . $row["ticket_num"] . '");
+                    var action = select.options[select.selectedIndex].value;
+                    data = {"ticket_num": ticket_num,
+                            "action": action};
+                    $.post("ajax.php", data, function(response) {
+                        var cell = document.getElementById("status_' . $row["ticket_num"] . '");
+                        cell.innerHTML = action;
+                    });
+                });
+            });
+        </script>
+    </td>
   </tr>';
         echo $one_row;
     }
 } else {
     echo "0 results";
 }
-    
+ 
 
+ 
     
 
 $conn->close();
-echo $ctr;
-return $ctr;
+//echo $ctr;f
+//return $ctr;
     }
 
 
 
 ?> 
 
-<title><?php echo $sv['site_name'];?> Waitlist Management</title>
+<script src="/vendor/jquery/jquery.min.js"></script>
+
+<title><?php echo $sv['site_name'];?> Waitlist</title>
 
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Manage Queue</h1>
+            <h1 class="page-header">Waitlist</h1>
+            <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -139,19 +164,20 @@ return $ctr;
                     <i class="fa fa-ticket fa-fw"></i> Queue Status
                 </div>
                 <div class="panel-body">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover" id="queue_table">
                         <tr class="tablerow">
-                            <th>Number</th>
-                            <th>UTAID</th> 
+                            <th>Ticket Number</th> 
+                            <th>Ticket Status</th>
                             <th>Signed In</th>
                             <th>Expected Wait</th>
+                            <th>Admin Action</th>
                         </tr>
- 
+
                         <?php
 
-                        get_q_all();
-                        ?>
+                        get_q_all(); // gets all queue contents
 
+                        ?>
                     </table>
                 </div>
             </div>
@@ -164,4 +190,7 @@ return $ctr;
 <?php
 //Standard call for dependencies
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
+//last line comment
 ?>
+
+
