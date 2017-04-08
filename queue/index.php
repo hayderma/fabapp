@@ -8,6 +8,7 @@ $device_array = array();
 $_SESSION['type'] = "home";
 ?>
 <?php include("connecting.php"); ?>
+
 <?php
     
             
@@ -78,7 +79,7 @@ return $ctr;
     
  function get_q_all(){
     
-        $ctr = 0;
+       // $ctr = 0;
         $co = new connecting();
         $conn = $co->get_connection();
 // Check connection
@@ -110,31 +111,10 @@ if ($result->num_rows > 0) {
     
 
 $conn->close();
-echo $ctr;
-return $ctr;
+//echo $ctr;f
+//return $ctr;
     }
-//get_server_timestamp();
 
-
-/*$conn = get_connection();
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "SELECT * FROM info WHERE NETID='".$netid."'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        
-        echo "NETID_t: " . $row["NETID"]. " ,  Name: " . $row["Firstname"]. " " . $row["Lastname"]. "<br>";
-    }
-} else {
-    echo "0 results";
-}
-$conn->close();*/
 
 
 ?> 
@@ -167,7 +147,7 @@ $conn->close();*/
 
                         <?php
 
-                        get_q_all();
+                        get_q_all(); // gets all queue contents
 
                         ?>
                     </table>
@@ -182,4 +162,7 @@ $conn->close();*/
 <?php
 //Standard call for dependencies
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
+//last line comment
 ?>
+
+
