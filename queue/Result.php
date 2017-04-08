@@ -16,6 +16,10 @@ $_SESSION['type'] = "home";
     $u_id = $_POST['nid'];
     $ph_num = $_POST['phone'];
     $mach = $_POST['machine_select'];
+    $material =$_POST['material_select'];
+    $num_hours = $_POST['hour_select'];
+    $num_minutes = $_POST['minute_select'];
+    
     $valid_email=true;
     $e_mail=$_POST['email'];
     if(! "" == trim($_POST['email'])){  //checks if email field is not empty
