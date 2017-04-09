@@ -79,16 +79,21 @@ return $ctr;
     
  function get_q_all(){
     
+
+    
        // $ctr = 0;
         $co = new connecting();
         $conn = $co->get_connection();
+     
+
+
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
 
-$sql = "select status,ticket_num,q_start FROM queue";
+$sql = "select status,ticket_num,q_start,device_used,wait_countdown FROM queue WHERE status ='Not Activated' OR status ='Activated'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -96,9 +101,10 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $one_row= ' <tr>
     <td>'. $row["ticket_num"].'</td> 
+    <td>'. $row["device_used"].'</td>  
     <td>'. $row["status"].'</td>
     <td>'. $row["q_start"].'</td>
-    <td>To be determined by machine</td>
+    <td>'. $row["wait_countdown"].'</td>
   </tr>';
         echo $one_row;
     }
@@ -119,19 +125,19 @@ $conn->close();
 
 ?> 
 
-<title><?php echo $sv['site_name'];?> Waitlist</title>
+<title> Waitlist</title>
 
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Waitlist</h1>
+            <h1 class="page-header" >Wait List</h1>
             <a href="Signup.php">Signup to waitlist to use a machine</a>  <br> <br>
         </div>
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-ticket fa-fw"></i> Queue Status
@@ -140,6 +146,7 @@ $conn->close();
                     <table class="table table-striped table-bordered table-hover">
                         <tr class="tablerow">
                             <th>Ticket Number</th> 
+                            <th>Device</th>
                             <th>Ticket Status</th>
                             <th>Signed In</th>
                             <th>Expected Wait</th>
