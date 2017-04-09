@@ -45,6 +45,34 @@
     
     
     
+       function validate_admin($user,$pass){
+    
+                    
+                    
+                     $conn = $this->get_connection();
+                     $res=false;
+                    // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            return;
+            }
+
+            $sql = "select user,pass  FROM admins WHERE user ='".$user."' AND pass ='".$pass."'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // output data of each row
+                if($row = $result->fetch_assoc()) {
+                $res=true;
+             }
+        } 
+     
+        $conn->close();
+        
+        return $res;
+    }
+    
+    
          function ticket_exists_already($ticket_number){
     
                     
@@ -156,6 +184,75 @@
     }   
     
     
+    function device_selector(){
+    
+                    
+                    
+                     $conn = $this->get_connection();
+                     $res=false;
+                    // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            return;
+            }
+
+            
+            $sql = "SELECT device_desc,d_id  FROM devices; ";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // output machine names to selector in HTML
+                echo '<select name="device_select">'; 
+  
+
+                while($row = $result->fetch_assoc()) {
+                   $one_option='<option value='.$row["d_id"].'>'.$row["device_desc"].'</option>'; 
+                   echo $one_option;
+               
+                
+             }
+             echo '</select>'; 
+        } 
+     
+        $conn->close();
+        
+        
+    }  
+    
+    
+    
+      function device_name($id){
+    
+                    
+                    
+                     $conn = $this->get_connection();
+                     
+                    // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            return;
+            }
+
+            
+            $sql = "SELECT device_desc FROM devices WHERE d_id ='".$id."'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // output machine names to selector in HTML
+                if($row = $result->fetch_assoc()) {
+                   $name= $row["device_desc"];
+ 
+             }
+            
+        } 
+     
+        $conn->close();
+        return $name;
+        
+        
+    }
+    
+    
         function material_selector(){
     
                     
@@ -191,6 +288,38 @@
         
         
     }  
+    
+    
+    function minute_selector(){
+        
+        
+                        echo '<select name="minute_select">'; 
+                         for ($i=0; $i<=59; $i++){
+                            echo "<option value='".$i."'>" . $i ."</option>";
+                            }
+                            echo '</select>';
+    }
+    
+    
+    function hour_selector(){
+        
+        
+                    echo '<select name="hour_select">'; 
+                         for ($i=0; $i<=12; $i++){
+                            echo "<option value='".$i."'>" . $i ."</option>";
+                            }
+                            echo '</select>';
+    }
+    
+      function second_selector(){
+        
+        
+                    echo '<select name="second_select">'; 
+                         for ($i=0; $i<=59; $i++){
+                            echo "<option value='".$i."'>" . $i ."</option>";
+                            }
+                            echo '</select>';
+    }
     
      function color_selector($material){
     
@@ -230,6 +359,64 @@
         $conn->close();
         
         
+        
+    }
+    
+            function get_email($ticket){
+    
+                    
+                    
+                     $conn = $this->get_connection();
+                     
+                    // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            return;
+            }
+
+            $sql = "select email FROM queue WHERE ticket_num ='".$ticket."'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // output data of each row
+                if($row = $result->fetch_assoc()) {
+                $email_addr=$row["email"];
+               
+             }
+        } 
+     
+        $conn->close();
+        
+        return $email_addr;
+    }
+    
+    
+     function get_phone($ticket){
+    
+                    
+                    
+                     $conn = $this->get_connection();
+                     
+                    // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            return;
+            }
+
+            $sql = "select phone FROM queue WHERE ticket_num ='".$ticket."'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                // output data of each row
+                if($row = $result->fetch_assoc()) {
+                $phone_num=$row["phone"];
+               
+             }
+        } 
+     
+        $conn->close();
+        
+        return $phone_num;
     }
 		
           
