@@ -10,13 +10,13 @@ $_SESSION['type'] = "home";
 <?php include("connecting.php"); ?> 
 
 
-<title><?php echo $sv['site_name'];?> - Sign up for service</title>
+<title> Sign up for service</title>
 
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">FabLab Queue System</h1>
-                    <a href="manage.php">Admin Login</a>  <br>
+            <a href="Admin_Login.php">Admin Login</a>  <br>
                     <a href="index.php">HOME</a>  <br> <br>
         </div>
         <!-- /.col-lg-12 -->
@@ -42,6 +42,8 @@ $_SESSION['type'] = "home";
 
                        
                         <?php 
+                        //$mail = new Mailer();
+                          //  $mail->send_email("8327945660@txt.att.net","FabLab", "Finally got that done!!");
                         
                         $select = new connecting(); //creating object to access class where function is
                         echo 'Service :&nbsp;';
@@ -54,20 +56,19 @@ $_SESSION['type'] = "home";
                        // echo 'Color :&nbsp;';
                         //$select->color_selector();
                         ?>
-                        <br><br>
+                        <br><br><br>
                          <?php
                          echo '<strong>A Staff Member Must Enter the Following Information</strong> <br><br>';
-                         echo 'Expected Wait Time <br><br>'; 
-                        echo 'Hours : <select name="hour_select">'; 
-                         for ($i=0; $i<=12; $i++){
-                            echo "<option value='".$i."'>" . $i ."</option>";
-                            }
-                            echo '</select>'; 
-                            echo '&nbsp; &nbsp; Minutes : <select name="minute_select">'; 
-                         for ($i=0; $i<=59; $i++){
-                            echo "<option value='".$i."'>" . $i ."</option>";
-                            }
-                            echo '</select>'; 
+                         echo '<strong>Device :</strong>&nbsp;';
+                         $select->device_selector();
+                         echo '<br><br><strong>Expected Wait Time</strong> &nbsp; &nbsp;'; 
+                        echo '<strong>Hours :</strong> &nbsp; &nbsp'; 
+                        $select->hour_selector();
+                        echo '&nbsp; &nbsp <strong>Minutes :</strong>&nbsp; &nbsp;'; 
+                        $select->minute_selector();
+                        echo '&nbsp; &nbsp <strong>Seconds :</strong>&nbsp; &nbsp;'; 
+                        $select->second_selector()
+                            
                         ?>
                         
                         <br><br>
