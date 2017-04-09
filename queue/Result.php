@@ -3,11 +3,20 @@
  *   CC BY-NC-AS UTA FabLab 2016-2017
  *   FabApp V 0.9
  */
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
+
+
+
 $device_array = array();
 $_SESSION['type'] = "home";
 ?>
-<?php include("connecting.php"); ?>
+<?php include("connecting.php"); 
+
+?>
+
+
 <?php
     
      if(isset($_POST['submit'])) {
@@ -19,6 +28,18 @@ $_SESSION['type'] = "home";
     $material =$_POST['material_select'];
     $num_hours = $_POST['hour_select'];
     $num_minutes = $_POST['minute_select'];
+    $num_seconds = $_POST['second_select'];
+    $_device_id = $_POST['device_select'];
+    if (strlen($num_hours)==1){
+        $num_hours = '0'.$num_hours;
+    }
+     if (strlen($num_minutes)==1){
+        $num_minutes = '0'.$num_minutes;
+    }
+     if (strlen($num_seconds)==1){
+        $num_seconds = '0'.$num_seconds;
+    }
+    $remaining = $num_hours.":".$num_minutes.":".$num_seconds;
     
     $valid_email=true;
     $e_mail=$_POST['email'];
@@ -30,6 +51,8 @@ $_SESSION['type'] = "home";
     }
 
     // Now you can do whatever with this variable.
+    
+  
 }
 else{
     echo 'null pointer';
@@ -71,7 +94,7 @@ $conn->close();
 return $time_stamp;
     }
     
-function insert_q($id,$machine_t,$e_add,$ph_n){
+function insert_q($id,$machine_t,$e_add,$ph_n,$device_id,$devicename,$waittime,$_material){
     
         
         $co = new connecting();
@@ -84,13 +107,11 @@ if ($conn->connect_error) {
 
 $ticket_number = $co->generate_ticket($machine_t); //variable for ticket number
 
+
 $status = "You successfully Signed Up, your Ticket number is ".$ticket_number.".<br> <br> If you provided Email/Phone information, they will be used to notify you when your turn is comping up.<br>Your estimated wait time will be updating automatically on the screen";
-if ($co->ticket_exists_already($ticket_number)){
 
-    $status = "Signup Unsuccessfull, ticket number already exists, Please click Go to Home to Signup";
-    
-}
 
+// insert item to queue
 $sql = 'INSERT INTO queue (
 q_id ,
 dg_id ,
@@ -103,15 +124,28 @@ email ,
 phone ,
 ca_id,
 ticket_num,
-status
+status,
+device_used,
+wait_countdown,
+material
 )
 VALUES (
-NULL , 1, '.$id.', "code", "string", "'. get_server_timestamp().'" , "string", "'.$e_add.'" , "'.$ph_n.'" , 1, "'.$ticket_number.'", "Not Activated"
+NULL , 1, '.$device_id.', '.$id.', "'. get_server_timestamp().'" , "'. get_server_timestamp().'" , "unknown yet", "'.$e_add.'" , "'.$ph_n.'" , 1, "'.$ticket_number.'", "Not Activated", "'.$devicename.'", "'.$waittime.'", "'.$_material.'"
 )';
+
 
 if ($conn->query($sql) === TRUE) {
     echo $status ;
-} else {
+        /*
+        
+        $phone = $co->get_phone($ticket_number);
+        $email = $co->get_email($ticket_number);
+        $title= "Confirmation";
+        $msg = "Sir/Mam: \r\nThis Message is to confirm your signup for a FabLab service.\r\nYour "
+                . "Ticket Number is: ".$ticket_number."\r\nYour Ticket Number is now in the queue.";
+        send_email($phone."@txt.att.net",$title, $msg);*/
+} 
+else {
     echo "Error While Signing up, Please call a staff member for help. <br> <br> Database Error Message :<br>" . $sql . "<br>" . $conn->error;
 }
     
@@ -132,7 +166,7 @@ $conn->close();
 ?> 
 
 
-<title><?php echo $sv['site_name'];?> Results</title>
+<title> Results</title>
  <script>
 function disable_f5(e)
 {
@@ -175,7 +209,7 @@ $(document).ready(function(){
                         $v = new connecting();
                         $vali = $v->validate_user($u_id);   
                         if($vali && $valid_email){
-                            insert_q($u_id,$mach,$e_mail,$ph_num);  //insert to queue
+                            insert_q($u_id,$mach,$e_mail,$ph_num,$_device_id,$v->device_name($_device_id),$remaining,$material);  //insert to queue
                         }
                         else{
                         if (!$vali) {
