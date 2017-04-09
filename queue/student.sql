@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2017 at 11:42 PM
+-- Generation Time: Apr 09, 2017 at 01:29 PM
 -- Server version: 5.1.73
 -- PHP Version: 5.3.3
 
@@ -68,6 +68,25 @@ CREATE TABLE IF NOT EXISTS `acct_charge` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admins`
+--
+
+CREATE TABLE IF NOT EXISTS `admins` (
+  `user` varchar(25) NOT NULL,
+  `pass` varchar(25) NOT NULL,
+  PRIMARY KEY (`user`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`user`, `pass`) VALUES
+('admin', 'mypass1');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `authrecipients`
 --
 
@@ -106,18 +125,19 @@ CREATE TABLE IF NOT EXISTS `carrier` (
   `provider` varchar(50) NOT NULL,
   `email` varchar(110) NOT NULL,
   PRIMARY KEY (`ca_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `carrier`
 --
 
 INSERT INTO `carrier` (`ca_id`, `provider`, `email`) VALUES
-(1, 'AT&T', 'number@txt.att.net'),
-(2, 'Verizon', 'number@vtext.com'),
-(3, 'T-Mobile', 'number@tmomail.net'),
-(4, 'Sprint', 'number@messaging.sprintpcs.com'),
-(5, 'Virgin Mobile', 'number@vmobl.com');
+(1, 'AT&T', '@txt.att.net'),
+(2, 'Verizon', '@vtext.com'),
+(3, 'T-Mobile', '@tmomail.net'),
+(4, 'Sprint', '@messaging.sprintpcs.com'),
+(5, 'Virgin Mobile', '@vmobl.com'),
+(6, 'Prject Fi', '@msg.fi.google.com');
 
 -- --------------------------------------------------------
 
@@ -545,28 +565,21 @@ CREATE TABLE IF NOT EXISTS `queue` (
   `ca_id` int(11) DEFAULT NULL,
   `ticket_num` varchar(15) DEFAULT NULL,
   `status` varchar(20) NOT NULL,
+  `device_used` varchar(100) NOT NULL,
+  `wait_countdown` varchar(20) NOT NULL,
+  `material` varchar(100) NOT NULL,
   PRIMARY KEY (`q_id`),
   KEY `que_index_device_id` (`dg_id`),
   KEY `que_index_operator` (`UTAID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `queue`
 --
 
-INSERT INTO `queue` (`q_id`, `dg_id`, `UTAID`, `CODE`, `created`, `q_start`, `duration`, `email`, `phone`, `ca_id`, `ticket_num`, `status`) VALUES
-(8, 1, '1000000001', 'code', 'string', '10:47 PM', 'string', 'myemail', '8179999999', 1, 'AIR-1', 'Not Activated'),
-(9, 1, '1000000009', 'code', 'string', '10:49 PM', 'string', 'myemail', '8179999999', 1, 'E_S-9', 'Not Activated'),
-(10, 1, '1000000009', 'code', 'string', '10:57 PM', 'string', 'myemail', '8179999999', 1, '3D-10', 'Not Activated'),
-(11, 1, '1000000001', 'code', 'string', '10:59 PM', 'string', 'myemail', '8179999999', 1, '3D-11', 'Not Activated'),
-(12, 1, '1000000001', 'code', 'string', '10:59 PM', 'string', 'myemail', '8179999999', 1, '3D-12', 'Not Activated'),
-(13, 1, '1000000009', 'code', 'string', '10:59 PM', 'string', 'myemail', '8179999999', 1, '3D-13', 'Not Activated'),
-(14, 1, '1000000009', 'code', 'string', '11:06 PM', 'string', 'myemail', '8179999999', 1, '3D-14', 'Not Activated'),
-(15, 1, '1000000009', 'code', 'string', '11:07 PM', 'string', 'myemail', '8179999999', 1, '3D-15', 'Not Activated'),
-(16, 1, '1000000009', 'code', 'string', '11:09 PM', 'string', 'myemail', '8179999999', 1, '3D-16', 'Not Activated'),
-(17, 1, '1000000009', 'code', 'string', '11:10 PM', 'string', 'myemail', '8179999999', 1, '3D-17', 'Not Activated'),
-(18, 1, '1000000009', 'code', 'string', '11:10 PM', 'string', 'myemail', '8179999999', 1, '3D-18', 'Not Activated'),
-(19, 1, '1000000009', 'code', 'string', '11:28 PM', 'string', 'myemail', '8179999999', 1, '3D-19', 'Not Activated');
+INSERT INTO `queue` (`q_id`, `dg_id`, `UTAID`, `CODE`, `created`, `q_start`, `duration`, `email`, `phone`, `ca_id`, `ticket_num`, `status`, `device_used`, `wait_countdown`, `material`) VALUES
+(50, 1, '18', '1000000009', '01:14 PM', '01:14 PM', 'unknown yet', 'hayder.industry@gmail.com', '8327945660', 1, '3D-50', 'Not Activated', 'Shopbot Handi-bot', '02:05:02', 'ABS'),
+(49, 1, '1', '1000000009', '12:59 PM', '12:59 PM', 'unknown yet', 'hayder.industry@gmail.com', '8327945660', 1, '3D-1', 'Not Activated', 'Bandsaw', '04:12', 'ABS');
 
 -- --------------------------------------------------------
 
