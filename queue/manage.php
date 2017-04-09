@@ -12,7 +12,6 @@ $_SESSION['type'] = "home";
 <?php
     
             
-
     
 function get_server_timestamp(){
     echo 'starting';
@@ -25,10 +24,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
-
 $sql = "select DATE_FORMAT(NOW(),'%h:%i %p') AS timestamp";
 $result = $conn->query($sql);
-
 if ($result->num_rows > 0) {
     // output data of each row
     if($row = $result->fetch_assoc()) {
@@ -38,9 +35,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
     
-
     
-
 $conn->close();
 echo $time_stamp;
 return $time_stamp;
@@ -56,10 +51,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
-
 $sql = "select COUNT(*) AS CTR FROM queue";
 $result = $conn->query($sql);
-
 if ($result->num_rows > 0) {
     // output data of each row
     if($row = $result->fetch_assoc()) {
@@ -69,9 +62,7 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
     
-
     
-
 $conn->close();
 echo $ctr;
 return $ctr;
@@ -87,20 +78,20 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
     return;
 }
-
-$sql = "select status,ticket_num,q_start FROM queue";
+$sql = "select status,ticket_num,q_start,device_used,wait_countdown FROM queue WHERE status ='Not Activated' OR status ='Activated'";
 $result = $conn->query($sql);
-
 if ($result->num_rows > 0) {
     // output data of each row
+     
     while($row = $result->fetch_assoc()) {
         $one_row= ' <tr>
     <td>'. $row["ticket_num"].'</td> 
     <td id="status_' . $row["ticket_num"] . '">' . $row["status"] . '</td>
     <td>' . $row["q_start"] . '</td>
-    <td>To be determined by machine</td>
+    <td>'. $row["wait_countdown"].'</td>
     <td>
         <select name="admin" id="opt_' . $row["ticket_num"] . '" required>
+            <option value=" ">Select Action</option>
             <option value="Activated">Activate</option>
             <option value="Cancelled">Cancel</option>
             <option value="Closed">Close</option>
@@ -116,10 +107,39 @@ if ($result->num_rows > 0) {
                     var action = select.options[select.selectedIndex].value;
                     data = {"ticket_num": ticket_num,
                             "action": action};
-                    $.post("ajax.php", data, function(response) {
+                    $.post("Action_ajax.php", data, function(response) {
                         var cell = document.getElementById("status_' . $row["ticket_num"] . '");
                         cell.innerHTML = action;
                     });
+                });
+            });
+        </script>
+    </td>
+    
+    
+      <td>
+        <button type="button" id="notify_' . $row["ticket_num"] . '">Notify User</button>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#notify_' . $row["ticket_num"] . '").click(function() {
+                     var ticket_num = "' . $row["ticket_num"] . '";
+                     var r = confirm("Are you sure you want to send a service available notice to user with ticket "+ticket_num+"?");
+                    if (r == true) {
+                    
+                    
+                    var select = document.getElementById("opt_' . $row["ticket_num"] . '");
+                    
+                    data = {"ticket_num": ticket_num};
+                    $.post("Mailer.php", data, function(response) {
+                    
+                        
+                    });
+                    alert("Notification Sent to user with ticket number "+ticket_num);
+                    } 
+                   
+                    
+
+                   
                 });
             });
         </script>
@@ -131,17 +151,12 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
  
-
  
     
-
 $conn->close();
 //echo $ctr;f
 //return $ctr;
     }
-
-
-
 ?> 
 
 <script src="/vendor/jquery/jquery.min.js"></script>
@@ -158,7 +173,7 @@ $conn->close();
     </div>
     <!-- /.row -->
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-11">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-ticket fa-fw"></i> Queue Status
@@ -170,13 +185,11 @@ $conn->close();
                             <th>Ticket Status</th>
                             <th>Signed In</th>
                             <th>Expected Wait</th>
-                            <th>Admin Action</th>
+                            <th>Administrative Action</th>
                         </tr>
 
                         <?php
-
                         get_q_all(); // gets all queue contents
-
                         ?>
                     </table>
                 </div>
@@ -192,5 +205,3 @@ $conn->close();
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
 //last line comment
 ?>
-
-
