@@ -121,7 +121,19 @@ function uPrintForm($operator, $d_id, $est_time, $p_id, $status_id, $device_mats
 function genericForm($operator, $d_id, $est_time, $p_id, $status_id, $staff_id, $m_id){
     //Attempt to create new Ticket
     $trans_id = Transactions::insertTrans($operator, $d_id, $est_time, $p_id, $status_id, $staff_id);
+
     if (is_int($trans_id)) {
+
+        // Update queue
+        $sql = 'UPDATE queue SET status="activated" WHERE UTAID="';
+        $sql = $sql . $operator;
+        $sql = $sql . '" and dg_id="';
+        $sql = $sql . $d_id;
+        $sql = $sql . '"';
+        if (!($mysqli->query($sql) === TRUE)) {
+            echo "<script> alert('Could not update queue')</script>";
+        }
+
         if(strcmp($m_id,"none") != 0)
             if(Mats_Used::insert_Mats($trans_id, $m_id, $status_id, $staff_id) === false)
                 echo "<script> alert('Can Not Indicate Materials Used\\nfor ticket - $trans_id')</script>";
