@@ -125,13 +125,39 @@ function genericForm($operator, $d_id, $est_time, $p_id, $status_id, $staff_id, 
     if (is_int($trans_id)) {
 
         // Update queue
-        $sql = 'UPDATE queue SET status="activated" WHERE UTAID="';
-        $sql = $sql . $operator;
-        $sql = $sql . '" and dg_id="';
-        $sql = $sql . $d_id;
-        $sql = $sql . '"';
+        global $mysqli;
+        // First get the device group based on device id
+        $sql = 'SELECT dg_id FROM devices WHERE d_id="' . $d_id . '"';
+        $result = $mysqli->query($sql);
+        if ($result->num_rows != 1) {
+            $errorMsg = "Error getting device group";
+            $error = true;
+            return;
+        } else {
+            $row = $result->fetch_assoc();
+            $dg_id = $row['dg_id'];
+        }
+
+        $sql = 'UPDATE queue SET status="Activated" WHERE CODE="' . $operator . '"';
+        $sql = $sql . ' and dg_id="' . $dg_id . '"';
         if (!($mysqli->query($sql) === TRUE)) {
             echo "<script> alert('Could not update queue')</script>";
+        } 
+        $sql = 'SELECT ticket_num FROM queue WHERE CODE="' . $operator . '"';
+        $sql = $sql . ' and dg_id="' . $dg_id . '"';
+        $result = $mysqli->query($sql);
+        if ($result->num_rows != 1) {
+            $errorMsg = "Error getting device group";
+            $error = true;
+            return;
+        } else {
+            $row = $result->fetch_assoc();
+            $ticket_num = $row['ticket_num'];
+            echo '<script type="text/javascript">
+                    var ticket_num = "' . $ticket_num . '";
+                    data = { "ticket_num": ticket_num };
+                    $.post("../queue/index.php", data, function(response) {});
+                   </script>';
         }
 
         if(strcmp($m_id,"none") != 0)

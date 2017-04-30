@@ -10,6 +10,32 @@ $_SESSION['type'] = "home";
 <?php include("connecting.php"); ?>
 
 <?php
+if (isset($_POST['ticket_num'])) {
+
+    $ticket_num = $_POST['ticket_num'];
+    if (strcmp($ticket_num, " ") != 0) {
+        $co = new connecting();
+        $conn = $co->get_connection();
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+            return;
+        }
+        $sql = 'SELECT status FROM queue WHERE ticket_num="' . $ticket_num . '"';
+        $result = $conn->query($sql);
+        if ($result->num_rows != 1) {
+            die("Error getting status");
+            return;
+        } else {
+            $row = $result->fetch_assoc();
+            $status = $row['status'];
+            echo '<script type="text/javascript">
+                    var cell = document.getElementById("status_' . $ticket_num . '");
+                    cell.innerHTML = "' . $status  . '";
+                 </script>';
+        }
+    }
+}
+
     
             
 
@@ -102,7 +128,7 @@ if ($result->num_rows > 0) {
         $one_row= ' <tr>
     <td>'. $row["ticket_num"].'</td> 
     <td>'. $row["device_used"].'</td>  
-    <td>'. $row["status"].'</td>
+    <td id="status_' . $row["ticket_num"] . '">'. $row["status"].'</td>
     <td>'. $row["q_start"].'</td>
     <td>'. $row["wait_countdown"].'</td>
   </tr>';
