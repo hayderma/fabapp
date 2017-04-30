@@ -19,8 +19,7 @@ end1.setMinutes(end1.getMinutes()+minutesleft);
 end1.setSeconds(end1.getSeconds()+secondsleft);
 
 }
-<?php
-$r='
+
 var counter = function () {
 var now = new Date();
 var diff = end1 - now;
@@ -52,10 +51,7 @@ if(now >= end1) {
     //localStorage.clear();
 }
 }
-  ';
-echo $r;
-  
-?>
+
 var interval = setInterval(counter, 1000);
 </script>
 </body>
