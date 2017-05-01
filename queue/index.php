@@ -10,32 +10,6 @@ $_SESSION['type'] = "home";
 <?php include("connecting.php"); ?>
 
 <?php
-if (isset($_POST['ticket_num'])) {
-    $ticket_num = $_POST['ticket_num'];
-    if (strcmp($ticket_num, " ") != 0) {
-        $co = new connecting();
-        $conn = $co->get_connection();
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-            return;
-        }
-        $sql = 'SELECT status FROM queue WHERE ticket_num="' . $ticket_num . '"';
-        $result = $conn->query($sql);
-        if ($result->num_rows != 1) {
-            die("Error getting status");
-            return;
-        } else {
-            $row = $result->fetch_assoc();
-            $status = $row['status'];
-            echo '<script type="text/javascript">
-                    var cell = document.getElementById("status_' . $ticket_num . '");
-                    cell.innerHTML = "' . $status  . '";
-                 </script>';
-        }
-    }
-}
-    
-            
     
 function get_server_timestamp(){
     echo 'starting';
@@ -92,7 +66,7 @@ echo $ctr;
 return $ctr;
     }
     
- function get_q_all(){
+function get_q_all(){
     
     
        // $ctr = 0;
@@ -114,8 +88,67 @@ if ($result->num_rows > 0) {
     <td>'. $row["device_used"].'</td>  
     <td id="status_' . $row["ticket_num"] . '">'. $row["status"].'</td>
     <td>'. $row["q_start"].'</td>
-    <td>'. $row["wait_countdown"].'</td>
-  </tr>';
+    <td>'. $row["wait_countdown"].'</td>';
+    // Add management features if logged in as admin
+    global $staff;
+    if ($staff) {
+        $one_row = $one_row . '
+            <td>
+                <select name="admin" id="opt_' . $row["ticket_num"] . '" required>
+                    <option value=" ">Select Action</option>
+                    <option value="Activated">Activate</option>
+                    <option value="Closed">Close</option>
+                </select>
+            </td>
+            <td>
+                <button type="button" id="btn_' . $row["ticket_num"] . '">Go</button>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#btn_' . $row["ticket_num"] . '").click(function() {
+                            var ticket_num = "' . $row["ticket_num"] . '";
+                            var select = document.getElementById("opt_' . $row["ticket_num"] . '");
+                            var action = select.options[select.selectedIndex].value;
+                            data = {"ticket_num": ticket_num,
+                                    "action": action};
+                            $.post("Action_ajax.php", data, function(response) {
+                                var cell = document.getElementById("status_' . $row["ticket_num"] . '");
+                                cell.innerHTML = action;
+                            });
+                        });
+                    });
+                </script>
+            </td>
+            
+            
+              <td>
+                <button type="button" id="notify_' . $row["ticket_num"] . '">Notify User</button>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#notify_' . $row["ticket_num"] . '").click(function() {
+                             var ticket_num = "' . $row["ticket_num"] . '";
+                             var r = confirm("Are you sure you want to send a service available notice to user with ticket "+ticket_num+"?");
+                            if (r == true) {
+                            
+                            
+                            var select = document.getElementById("opt_' . $row["ticket_num"] . '");
+                            
+                            data = {"ticket_num": ticket_num};
+                            $.post("Mailer.php", data, function(response) {
+                            
+                                
+                            });
+                            alert("Notification Sent to user with ticket number "+ticket_num);
+                            } 
+                           
+                            
+
+                           
+                        });
+                    });
+                </script>
+            </td>';
+    }
+  $one_row = $one_row . '</tr>';
         echo $one_row;
     }
 } else {
@@ -127,6 +160,7 @@ if ($result->num_rows > 0) {
 $conn->close();
     }
 ?> 
+<script src="/vendor/jquery/jquery.min.js"></script>
 
 <title> Waitlist</title>
 
@@ -153,6 +187,9 @@ $conn->close();
                             <th>Ticket Status</th>
                             <th>Signed In</th>
                             <th>Expected Wait</th>
+                            <?php if ($staff) { ?>
+                                <th>Admin Action</th>
+                            <?php } ?>
                         </tr>
 
                         <?php
