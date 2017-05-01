@@ -234,6 +234,9 @@ if ($staff) if($staff->getRoleID() > 6) { ?>
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
+                            <a href="queue/index.php"><i class="fa fa-list-alt fa-fw"></i> Queue</a>
+                        </li>
+                        <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Admin<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
