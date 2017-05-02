@@ -1,0 +1,10 @@
+Please notr the following regarding email:
+
+when you place the PHPMailer folder, first make sure that you place it inside the queue folder.
+Also make sure that you don't place the upper lever too, meaning when you unzipp it(zipped version attached here), the unzipped folder tree will be like :
+PHPMailer -> PHPMailer -> Files inside PHPMailer
+
+so just copy the lower lever PHPMailr folder
+
+PHPMailer -> Files inside PHPMailer
+NOT PHPMailer -> PHPMailer -> Files inside PHPMailer
